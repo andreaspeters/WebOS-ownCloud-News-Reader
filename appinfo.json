@@ -1,0 +1,9 @@
+{
+  "id": "com.phil.extender",
+  "version": "0.0.1",
+  "vendor": "phil",
+  "type": "web",
+  "main": "index.html",
+  "title": "Extender",
+  "uiRevision": "2"
+}
