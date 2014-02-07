@@ -1,9 +1,9 @@
 {
-  "id": "com.phil.extender",
+  "id": "biz.aventer.extender",
   "version": "0.0.1",
-  "vendor": "phil",
+  "vendor": "avEnter UG (haftungsbeschraenkt)",
   "type": "web",
   "main": "index.html",
-  "title": "Extender",
+  "title": "OwnCloud RSS News Reader",
   "uiRevision": "2"
 }
