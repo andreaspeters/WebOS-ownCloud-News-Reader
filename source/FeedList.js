@@ -14,8 +14,6 @@ enyo.kind({
 			]}
 		]},
 		{kind: enyo.Toolbar, pack: "justify", components: [
-			{flex: 1},
-			{icon: "images/menu-icon-new.png", onclick: "doNewFeedTap", align: "right"}
 		]}
 	],
 
@@ -26,12 +24,14 @@ enyo.kind({
 	 }, 
 
 	getFeed: function(inSender, inIndex) {
-		var r = this.owner.feedList[inIndex];
-     
-		if (r) {
-         		this.$.listItemTitle.setContent(r.title);
-         		return true;
-     		}
+		if (typeof this.owner.feedList != "undefined") {
+			var r = this.owner.feedList[inIndex];
+     		
+			if (r) {
+       				this.$.listItemTitle.setContent(r.title);
+	       			return true;
+     			}
+		}
  	}	 
 
 });

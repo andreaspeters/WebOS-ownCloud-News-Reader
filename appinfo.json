@@ -1,9 +1,10 @@
 {
-  "id": "biz.aventer.extender",
+  "id": "biz.aventer.ocnews",
   "version": "0.0.1",
   "vendor": "avEnter UG (haftungsbeschraenkt)",
   "type": "web",
   "main": "index.html",
   "title": "OwnCloud RSS News Reader",
-  "uiRevision": "2"
+  "uiRevision": "2",
+  "icon": "images/ocnews48.png"
 }

@@ -1,24 +1,7 @@
 enyo.kind({
-	name: "MyApps.Extender",
-	appName: "OwnCloud RSS News Reader",
+	name: "MyApps.OCNewsReader",
 	kind: enyo.VFlexBox,
 	components: [  
-		{kind: "WebService", name: "testFeed", onSuccess: "testFeedSuccess", onFailure: "testFeedFailed"},
-	 	{kind: "WebService", name: "grabFeed", onSuccess: "grabFeedSuccess", onFailure: "grabFeedFailed"},
-     	 	{kind: "Popup", name: "newFeedPopup", components: [
-         		{style: "font-size: 1.1em; text-align: center", className: "enyo-item enyo-first", components: [
-             			{content: "Add New Feed", style: "align: center"}
-         		]},
-         		{className: "enyo-item enyo-middle", components: [
-             			{kind: enyo.Input, name: "newFeedTitle", hint: "New Feed Name", autoCapitalize: "lowercase"}
-         		]},
-         		{className: "enyo-item enyo-last", components: [
-             			{kind: enyo.Input, name: "newFeedURL", hint: "New Feed URL", autoCapitalize: "lowercase"}
-         		]},
-         		{flex: 1, components: [
-             			{kind: enyo.Button, onclick: "addNewFeed", caption: "Add Feed", className: "enyo-button-affirmative"}
-         		]}
-     		]},
      		{kind: "Popup", name: "feedFailurePopup", components: [
          		{style: "font-size: 1.1em; text-align: center; ", content: "Trouble Getting Feed"},
          		{style: "font-size: 0.8em; text-align: justify", width: "320px", components: [
@@ -50,70 +33,24 @@ enyo.kind({
 	],
 
 	ready: function() {
-     		this.feedList = localStorage.getItem("feedList");
+		this.ocnews = new MyApps.OCNews();
+		this.ocnews.login(localStorage.getItem("ocUsername"), localStorage.getItem("ocPassword"), localStorage.getItem("ocURL"));
+		this.ocnews.getFeedList();
+	},
+
+	updateFeedList: function(feeds) {
+     		this.feedList = feeds;
      		this.feedItems = [];
      
      		if (this.feedList == undefined) {
          		this.feedList = [];
      		} else {
-         		this.feedList = JSON.parse(this.feedList);
+         		this.feedList = this.feedList;
          		this.$.FeedListPane.$.feedList.render();
   		}
 
 
  	}, 
-
-	saveFeedList: function() {
-     		localStorage.setItem("feedList", JSON.stringify(this.feedList));
-	 },
-
- 	showAddNewFeedPopup: function() {
-     		this.$.newFeedPopup.openAtCenter();
- 	}, 
-
-	addNewFeed: function() {
-     		var url = "https://www.aventer.biz/api/?func=xml2json&url="
- 			+ encodeURI(this.$.newFeedURL.getValue())
-     		this.$.testFeed.setUrl(url);
-     		this.$.testFeed.call();
- 	},
-
- 	testFeedSuccess: function(inSender, inResponse, inRequest) {
-     		if (inResponse.query.results !== null) {
-         		this.feedList.push({
-             			title: this.$.newFeedTitle.getValue(),
-             			url: this.$.newFeedURL.getValue()
-         		});
-         		this.resetNewFeedData();
-		        this.saveFeedList();
-		        this.$.FeedListPane.$.feedList.render();
-		} else {
-         		this.testFeedFailed();
-     		}
- 	},
-
-	testFeedFailed: function() {
-     		this.$.feedFailurePopup.openAtCenter();
-     		this.$.feedFailureText.setContent("Either the feed URL you entered is incorrect or the "
- 		+ "feed just couldn't be grabbed. Please check the URL and try again.");
- 	},
-
- 	resetNewFeedData: function() {
-     		this.$.newFeedTitle.setValue("");
-     		this.$.newFeedURL.setValue("");
-     		this.$.newFeedPopup.close();
- 	},
-
-	grabFeedSuccess: function(inSender, inResponse, inRequest) {
-     		this.feedItems = inResponse.query.results.item;
-		this.$.feedItemsPane.$.feedItemsSpinner.hide();
-     		this.$.feedItemsPane.$.feedItems.render();
- 	}, 
-
-	grabFeedFailed: function() {
-     		this.$.feedFailurePopup.openAtCenter();
-     		this.$.feedFailureText.setContent("The feed could not be read at this time. Please try again.");
- 	},
 
  	showFeed: function(inSender, inEvent) {
      		var r = this.feedList[inEvent.rowIndex];
@@ -122,11 +59,25 @@ enyo.kind({
          		this.$.feedSlidingPane.selectView(this.$.feedItemsPane);
          		this.$.feedItemsPane.$.selectedFeedName.setContent(r.title);
          		this.$.feedItemsPane.$.feedItemsSpinner.show();
-         		var url = "https://www.aventer.biz/api/?func=xml2json&url="
-             			+ encodeURI(r.url);
-         		this.$.grabFeed.setUrl(url);
-         		this.$.grabFeed.call();
-     		}
+			this.ocnews.getFeedItems(r.id);
+		}
+	},
+
+	updateFeedItems: function(items) {
+     		this.feedItems = items;
+		this.$.feedItemsPane.$.feedItemsSpinner.hide();
+     		this.$.feedItemsPane.$.feedItems.render();
+	},
+
+ 	showAddNewFeedPopup: function() {
+     		this.$.newFeedPopup.openAtCenter();
+ 	}, 
+
+
+ 	resetNewFeedData: function() {
+     		this.$.newFeedTitle.setValue("");
+     		this.$.newFeedURL.setValue("");
+     		this.$.newFeedPopup.close();
  	},
 
 	deleteFeedItem: function(inSender, inIndex) {
@@ -144,7 +95,7 @@ enyo.kind({
          		return;
     		}
      		this.$.feedItemsPane.$.feedItemsSpinner.show();
-     		this.$.grabFeed.call();
+		this.ocnews.getFeedItems(r.id);
  	},
 
 	openFeedItem: function(inSender, inEvent) {
@@ -152,7 +103,7 @@ enyo.kind({
  
      		if(r) {
          		this.$.feedWebViewPane.$.selectedItemName.setContent(r.title);
-         		this.$.feedWebViewPane.$.currentFeedItemWebView.setUrl(r.link);
+         		this.$.feedWebViewPane.$.currentFeedItemWebView.setUrl(r.url);
      		}
  	},
 

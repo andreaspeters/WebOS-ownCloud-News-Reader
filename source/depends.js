@@ -4,5 +4,6 @@ enyo.depends(
 	"Extender.js",
 	"FeedWebView.js",
 	"ExtPrefs.js",
-	"ExtSaveArticle.js"
+	"ExtSaveArticle.js",
+	"OCNews.js"
 );

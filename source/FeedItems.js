@@ -28,13 +28,15 @@ enyo.kind({
  	},
 
 	getFeedItems: function(inSender, inIndex) {
-     		var r = this.owner.feedItems[inIndex];
+		if (typeof this.owner.feedItems != "undefined") {
+	     		var r = this.owner.feedItems[inIndex];
  
-     		if (r) {
-         		this.$.feedItemTitle.setContent(r.title);
-         		this.$.feedItemPublished.setContent(r.pubDate);
-         		return true;
-     		}
+     			if (r) {
+         			this.$.feedItemTitle.setContent(r.title);
+         			this.$.feedItemPublished.setContent(r.pubDate);
+	         		return true;
+     			}
+		}
  	} 
 
 });

@@ -10,14 +10,16 @@ enyo.kind({
      			]}
  		]},
  		{kind: enyo.Scroller, flex: 1, components: [
-     			{kind: (window.PalmSystem ? enyo.WebView : enyo.Iframe), name: "currentFeedItemWebView", flex: 1, onLoadComplete: "hideWebViewSpinner", onLoadStarted: "showWebViewSpinner"}
+     			{kind: "WebView", name: "currentFeedItemWebView", onLoadComplete: "hideWebViewSpinner", onLoadStarted: "showWebViewSpinner"}
  		]},
  		{kind: enyo.Toolbar, pack: "justify", components: [
      			{kind: enyo.GrabButton},
      			{flex: 1},
 			{icon: "images/menu-icon-refresh.png", onclick: "refreshWebView", align: "right"}, // Refresh Button
+/*
      			{icon: "images/print_icon_label.jpg", onclick: "openPrintDialog", align: "center"}, // Print Button
      			{icon: "images/save_icon.jpg", onclick: "openSaveDialog", align: "left"} // Save Button
+*/
  		]},
 
 
