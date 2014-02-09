@@ -3,7 +3,7 @@ enyo.kind({
 	kind: enyo.SlidingView,
 	layoutKind: enyo.VFlexLayout,
 	components: [
-		{kind: enyo.Header, style: "min-height: 60px;", layoutKind: enyo.HFlexLayout, components: [
+		{kind: enyo.Header, style: "min-height: 50px;", layoutKind: enyo.HFlexLayout, components: [
 			{content: "", name: "selectedFeedName", style: "text-overflow: ellipsis; overflow: hidden; white-space: nowrap;", flex: 1},
      			{kind: enyo.Spinner, name: "feedItemsSpinner", align: "right"}
  		]},
@@ -11,7 +11,7 @@ enyo.kind({
      			{kind: enyo.VirtualRepeater, name: "feedItems", onSetupRow: "getFeedItems", onclick: "doListTap", components: [
          			{kind: enyo.Item, layout: enyo.HFlexBox, tapHighlight: true, components: [
              				{name: "feedItemTitle", style: "text-overflow: ellipsis; overflow: hidden; white-space: nowrap;", content: ""},
-             				{name: "feedItemPublished", content: "", style: "font-size: 0.75em"}
+             				{name: "feedItemPublished", content: "", style: "font-size: 0.65em"},
          			]}
      			]}
  		]},

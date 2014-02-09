@@ -19,10 +19,16 @@ enyo.kind({
 			onCancel: "closePreferences"
 
 		}]},
+		// WebView
+		{kind: "Popup", name: "showFeedWebViewPopup", style: "width: 800px; height: 1000px", components: [
+			{name: "feedWebView", className: "enyo-bg", kind: "MyApps.FeedWebView"}
+
+		]},
      		{kind: "SlidingPane", flex: 1, multiViewMinWidth: 480, onSelect: "paneSelected", name: "feedSlidingPane", components: [
          		{name: "FeedListPane", width: "320px", kind: "MyApps.FeedList", onListTap: "showFeed", onDeleteFeed: "deleteFeedItem", onNewFeedTap: "showAddNewFeedPopup"},
          		{name: "feedItemsPane", width: "320px", peekWidth: 50, kind: "MyApps.FeedItems", onListTap: "openFeedItem", onRefreshTap: "refreshFeedItemsList"},
-         		{name: "feedWebViewPane", flex: 1, peekWidth: 100, kind: "MyApps.FeedWebView", onResize: "resizeWebView"}
+         		{name: "feedItemPreviewPane", flex: 1, peekWidth: 100, kind: "MyApps.FeedPreview", onResize: "resizeFeedPreview"},
+         		//{name: "feedWebViewPane", flex: 1, peekWidth: 100, kind: "MyApps.FeedWebView", onResize: "resizeWebView"}
      		]},
 
 
@@ -102,8 +108,11 @@ enyo.kind({
      		var r = this.feedItems[inEvent.rowIndex];
  
      		if(r) {
-         		this.$.feedWebViewPane.$.selectedItemName.setContent(r.title);
-         		this.$.feedWebViewPane.$.currentFeedItemWebView.setUrl(r.url);
+			this.$.feedItemPreviewPane.$.selectedItemName.setContent(r.title);
+			this.$.feedItemPreviewPane.$.currentFeedItemPreview.setContent(r.body);
+			this.url = r.url;
+         		//this.$.feedWebViewPane.$.selectedItemName.setContent(r.title);
+         		//this.$.feedWebViewPane.$.currentFeedItemWebView.setUrl(r.url);
      		}
  	},
 

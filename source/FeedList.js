@@ -3,14 +3,15 @@ enyo.kind({
 	kind: enyo.SlidingView,
 	layoutKind: enyo.VFlexLayout,
 	components: [
-		{kind: enyo.Header, style: "min-height: 60px;", components: [
-			{content: "Feeds"}
+		{kind: enyo.Header, style: "min-height: 50px;", components: [
+			{content: "OC News"}
 		]},	
 		{kind: enyo.Scroller, flex: 1, components: [
 			{kind: enyo.VirtualRepeater, name: "feedList", onSetupRow: "getFeed", onclick: "doListTap", components: [
 				{kind: enyo.SwipeableItem, onConfirm: "doDeleteFeed", layoutKind: enyo.HFlexLayout, tapHighlight: true, components: [
 					{name: "listItemTitle", content: ""}
-				]}
+
+				]},
 			]}
 		]},
 		{kind: enyo.Toolbar, pack: "justify", components: [
