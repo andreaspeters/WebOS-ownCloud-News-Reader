@@ -15,6 +15,9 @@ enyo.kind({
 			]}
 		]},
 		{kind: enyo.Toolbar, pack: "justify", components: [
+			{flex: 1},
+                        {icon: "images/configure.png", onclick: "doConfigure", align: "center"}
+
 		]}
 	],
 
@@ -23,6 +26,10 @@ enyo.kind({
 		"onNewFeedTap": "",
 		"onDeleteFeed": ""
 	 }, 
+
+	doConfigure: function() {
+		Feed.showPreferences();
+	},
 
 	getFeed: function(inSender, inIndex) {
 		if (typeof this.owner.feedList != "undefined") {

@@ -1,5 +1,5 @@
 enyo.kind({
-	name: "MyApps.FeedWebView",
+	name: "MyApps.FeedPreview",
 	kind: enyo.SlidingView,
 	layoutKind: enyo.VFlexLayout,
 	components: [
@@ -9,13 +9,20 @@ enyo.kind({
      			]}
  		]},
  		{kind: enyo.Scroller, flex: 1, components: [
-			{kind: (window.PalmSystem ? enyo.WebView : enyo.Iframe), style:"width:800px", name:"currentFeedItemWebView", onLoadComplete: "hideWebViewSpinner", onLoadStarted: "showWebViewSpinner"}
+			{kind: "HtmlContent", name: "currentFeedItemPreview", content: "", style: "font-size: 0.75em; padding: 10px 10px 10px 10px"}
  		]},
  		{kind: enyo.Toolbar, pack: "justify", components: [
      			{kind: enyo.GrabButton},
-     			{flex: 1}
-
+     			{flex: 1},
+			{icon: "images/forward-email.png", onclick: "sendEMail"} 
  		]}
-	]
+	],
+
+	sendEMail: function() {
+        	params = { "summary":Feed.r.title,
+                   	   "text":Feed.r.title+" : URL: "+Feed.r.url
+                    	 };
+		Feed.$.emailOpenCall.call({"id": "com.palm.app.email", "params":params});
+	}
 
 });

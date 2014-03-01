@@ -1,7 +1,10 @@
 enyo.kind({
 	name: "MyApps.OCNewsReader",
 	kind: enyo.VFlexBox,
+	r: "",
 	components: [  
+		{ name: "fileOpenCall", kind: "PalmService", service: "palm://com.palm.applicationManager/", method: "open", subscribe: true },
+		{ name: "emailOpenCall", kind: "PalmService", service: "palm://com.palm.applicationManager/", method: "launch", subscribe: true },
      		{kind: "Popup", name: "feedFailurePopup", components: [
          		{style: "font-size: 1.1em; text-align: center; ", content: "Trouble Getting Feed"},
          		{style: "font-size: 0.8em; text-align: justify", width: "320px", components: [
@@ -19,22 +22,20 @@ enyo.kind({
 			onCancel: "closePreferences"
 
 		}]},
-		// WebView
-		{kind: "Popup", name: "showFeedWebViewPopup", style: "width: 800px; height: 1000px", components: [
-			{name: "feedWebView", className: "enyo-bg", kind: "MyApps.FeedWebView"}
-
-		]},
-     		{kind: "SlidingPane", flex: 1, multiViewMinWidth: 480, onSelect: "paneSelected", name: "feedSlidingPane", components: [
+     		{kind: "SlidingPane", flex: 1, onSelect: "paneSelected", name: "feedSlidingPane", fixedWidth: false, dismissible: false, components: [
          		{name: "FeedListPane", width: "320px", kind: "MyApps.FeedList", onListTap: "showFeed", onDeleteFeed: "deleteFeedItem", onNewFeedTap: "showAddNewFeedPopup"},
          		{name: "feedItemsPane", width: "320px", peekWidth: 50, kind: "MyApps.FeedItems", onListTap: "openFeedItem", onRefreshTap: "refreshFeedItemsList"},
-         		{name: "feedItemPreviewPane", flex: 1, peekWidth: 100, kind: "MyApps.FeedPreview", onResize: "resizeFeedPreview"},
-         		//{name: "feedWebViewPane", flex: 1, peekWidth: 100, kind: "MyApps.FeedWebView", onResize: "resizeWebView"}
+         		{name: "feedItemPreviewPane", width: "600px", peekWidth: 150, kind: "MyApps.FeedPreview", onResize: "resizeFeedPreview"},
+         		{name: "feedItemWebViewPane", width: "30px", peekWidth: 200, kind: "MyApps.FeedWebView", onResize: "resizeFeedWebView"}
      		]},
 
 
 
 		{kind: "AppMenu", components: [
 			{caption: "Preferences", onclick: "showPreferences"},
+                        {caption: "Donation", onclick: "donateForAventer"},
+                        {caption: "About", onclick: "openAbout"},
+
 		]}
 	],
 
@@ -59,7 +60,7 @@ enyo.kind({
  	}, 
 
  	showFeed: function(inSender, inEvent) {
-     		var r = this.feedList[inEvent.rowIndex];
+     		r = this.feedList[inEvent.rowIndex];
  
      		if (r) {
          		this.$.feedSlidingPane.selectView(this.$.feedItemsPane);
@@ -105,21 +106,16 @@ enyo.kind({
  	},
 
 	openFeedItem: function(inSender, inEvent) {
-     		var r = this.feedItems[inEvent.rowIndex];
+     		r = this.feedItems[inEvent.rowIndex];
  
      		if(r) {
 			this.$.feedItemPreviewPane.$.selectedItemName.setContent(r.title);
 			this.$.feedItemPreviewPane.$.currentFeedItemPreview.setContent(r.body);
-			this.url = r.url;
-         		//this.$.feedWebViewPane.$.selectedItemName.setContent(r.title);
-         		//this.$.feedWebViewPane.$.currentFeedItemWebView.setUrl(r.url);
+			this.$.feedItemWebViewPane.$.currentFeedItemWebView.setUrl(r.url);
+			this.$.feedItemWebViewPane.$.selectedItemName.setContent(r.title);
      		}
  	},
 
-	resizeWebView: function() {
-     		if (!!window.PalmSystem)
-         		this.$.feedWebViewPane.$.currentFeedItemWebView.resize();
- 	},
 
 	showPreferences: function() {
 		this.$.showPreferencesPopup.openAtCenter();
@@ -131,6 +127,15 @@ enyo.kind({
 
 	savePreferences: function() {
 		this.$.showPreferencesPopup.close();
-	}
+	},
+
+	openAbout: function() {
+		this.$.fileOpenCall.call({ target: "http://www.aventer.biz"});
+	},
+
+	donateForAventer: function() {
+		this.$.fileOpenCall.call({ target: "https://www.aventer.biz/104-1-donate.html"});
+	},
+
 
 });
