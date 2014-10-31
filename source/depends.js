@@ -6,5 +6,6 @@ enyo.depends(
 	"FeedPreview.js",
 	"ExtPrefs.js",
 	"ExtSaveArticle.js",
-	"OCNews.js"
+	"OCNews.js",
+    "base64/base64_encode.js"
 );
