@@ -1,6 +1,6 @@
 {
   "id": "biz.aventer.ocnews",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "vendor": "avEnter UG (haftungsbeschraenkt)",
   "type": "web",
   "main": "index.html",
