@@ -53,6 +53,10 @@ enyo.kind({
 	this.doSave(newOcURLValue);
 	this.doSave(newOcUsernameValue);
 	this.doSave(newOcUsernameValue);
+
+    this.owner.ocnews.login(localStorage.getItem("ocUsername"), localStorage.getItem("ocPassword"), localStorage.getItem("ocURL"));
+    this.owner.ocnews.getFeedList();
+
   },
 
   cancelClick: function() {
