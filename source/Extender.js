@@ -2,6 +2,7 @@ enyo.kind({
 	name: "MyApps.OCNewsReader",
 	kind: enyo.VFlexBox,
 	r: "",
+	a: "",
 	components: [  
 		{ name: "fileOpenCall", kind: "PalmService", service: "palm://com.palm.applicationManager/", method: "open", subscribe: true },
 		{ name: "emailOpenCall", kind: "PalmService", service: "palm://com.palm.applicationManager/", method: "launch", subscribe: true },
@@ -35,8 +36,16 @@ enyo.kind({
 			{caption: "Preferences", onclick: "showPreferences"},
                         {caption: "Donation", onclick: "donateForAventer"},
                         {caption: "About", onclick: "openAbout"},
+            {caption: "License", onclick: "openLicensePopup"}
 
-		]}
+		]},
+
+        {kind: "Popup", name: "licensePopup", onclick: "btnLicenseClose", components: [
+            {content: "Software License: GPL - https://www.gnu.org/copyleft/gpl.html"},
+            {content: "Paper Background Image License: By Enrique Flouret - http://creativecommons.org/licenses/by/    2.0/deed.de"},
+            {content: "Source Code: https://bitbucket.org/andpeters/owncloud-news-reader"}
+        ]}
+
 	],
 
 	ready: function() {
@@ -60,60 +69,59 @@ enyo.kind({
  	}, 
 
  	showFeed: function(inSender, inEvent) {
-     		r = this.feedList[inEvent.rowIndex];
+     		this.a = this.feedList[inEvent.rowIndex];
  
-     		if (r) {
+     		if (this.a) {
          		this.$.feedSlidingPane.selectView(this.$.feedItemsPane);
-         		this.$.feedItemsPane.$.selectedFeedName.setContent(r.title);
+         		this.$.feedItemsPane.$.selectedFeedName.setContent(this.a.title);
          		this.$.feedItemsPane.$.feedItemsSpinner.show();
-			this.ocnews.getFeedItems(r.id);
+			this.ocnews.getFeedItems(this.a.id);
 		}
 	},
 
 	updateFeedItems: function(items) {
-     		this.feedItems = items;
+   		this.feedItems = items;
 		this.$.feedItemsPane.$.feedItemsSpinner.hide();
-     		this.$.feedItemsPane.$.feedItems.render();
+   		this.$.feedItemsPane.$.feedItems.render();
 	},
 
  	showAddNewFeedPopup: function() {
-     		this.$.newFeedPopup.openAtCenter();
+   		this.$.newFeedPopup.openAtCenter();
  	}, 
 
 
  	resetNewFeedData: function() {
-     		this.$.newFeedTitle.setValue("");
-     		this.$.newFeedURL.setValue("");
-     		this.$.newFeedPopup.close();
+   		this.$.newFeedTitle.setValue("");
+   		this.$.newFeedURL.setValue("");
+   		this.$.newFeedPopup.close();
  	},
 
 	deleteFeedItem: function(inSender, inIndex) {
-    		this.feedList.splice(inIndex, 1);
-     		this.$.FeedListPane.$.feedList.render();
-     		this.saveFeedList();
+  		this.feedList.splice(inIndex, 1);
+   		this.$.FeedListPane.$.feedList.render();
+   		this.saveFeedList();
  	},
 
 	closeFeedFailurePopup: function() {
-     		this.$.feedFailurePopup.close();
+   		this.$.feedFailurePopup.close();
  	},
 
 	refreshFeedItemsList: function() {
-     		if (!(this.feedList.length > 0)) {
-         		return;
-    		}
-     		this.$.feedItemsPane.$.feedItemsSpinner.show();
+   		if (!(this.feedList.length > 0)) {
+       		return;
+   		}
+   		this.$.feedItemsPane.$.feedItemsSpinner.show();
 		this.ocnews.getFeedItems(r.id);
  	},
 
 	openFeedItem: function(inSender, inEvent) {
-     		r = this.feedItems[inEvent.rowIndex];
+   		this.r = this.feedItems[inEvent.rowIndex];
  
-     		if(r) {
-			this.$.feedItemPreviewPane.$.selectedItemName.setContent(r.title);
-			this.$.feedItemPreviewPane.$.currentFeedItemPreview.setContent(r.body);
-			this.$.feedItemWebViewPane.$.currentFeedItemWebView.setUrl(r.url);
-			this.$.feedItemWebViewPane.$.selectedItemName.setContent(r.title);
-     		}
+   		if(this.r) {
+			this.$.feedItemPreviewPane.$.selectedItemName.setContent(this.r.title);
+			this.$.feedItemPreviewPane.$.currentFeedItemPreview.setContent(this.r.body);
+			this.$.feedItemPreviewPane.$.r = this.r;
+   		}
  	},
 
 
@@ -136,6 +144,32 @@ enyo.kind({
 	donateForAventer: function() {
 		this.$.fileOpenCall.call({ target: "https://www.aventer.biz/104-1-donate.html"});
 	},
+
+    // Convert the Unixtime to normal timestamp
+    unixtime: function(dateTime) {
+		console.log(dateTime);
+        var date = new Date(dateTime*1000);
+		console.log(date);
+        var day = date.getDate();
+        var month = date.getMonth()+1;
+        var year = date.getYear()+1900;
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        return day + '.' + month + '.' + year + '  ' + hours + ':' + minutes;
+    },
+
+    resizeFeedWebView: function() {
+        if (this.r) {
+                this.$.feedItemWebViewPane.$.currentFeedItemWebView.setUrl(this.r.url);
+                this.$.feedItemWebViewPane.$.selectedItemName.setContent(this.r.title);
+        }
+
+    },
+
+    openLicensePopup: function(inSender) {
+        this.$.licensePopup.openAtCenter();
+    }
+
 
 
 });
