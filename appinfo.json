@@ -2,6 +2,7 @@
   "id": "biz.aventer.ocnews",
   "version": "0.0.5",
   "vendor": "avEnter UG (haftungsbeschraenkt)",
+  "vendorurl": "http://www.aventer.biz",
   "type": "web",
   "main": "index.html",
   "title": "OwnCloud News Reader",
